@@ -5,14 +5,16 @@ import ForceGraph2D from "react-force-graph-2d";
 import type { GraphEdge, GraphNode } from "../types";
 
 interface Props {
-  nodes: any;
-  edges: any;
+  selected: string | null;
+  nodes: GraphNode[];
+  edges: GraphEdge[];
   onNodeClick: (nodeId: string) => void;
   onExpandNode: (nodeId: string) => void;
   loading: boolean;
 }
 
 export default function GraphView({
+  selected,
   nodes,
   edges,
   onNodeClick,
@@ -59,12 +61,13 @@ export default function GraphView({
         width={800}
         height={600}
         nodeCanvasObjectMode={() => "after"}
+        nodeColor={(node) => (node.id === selected ? "orange" : "blue")}
         nodeCanvasObject={(node, ctx, globalScale) => {
           const label = node.id as string;
           const fontSize = 12 / globalScale;
 
           ctx.font = `${fontSize}px Sans-Serif`;
-          ctx.fillStyle = "black";
+          ctx.fillStyle = label === selected ? "red" : "black";
           ctx.textAlign = "center";
           ctx.textBaseline = "top";
           ctx.fillText(label, node.x!, node.y! + 8);

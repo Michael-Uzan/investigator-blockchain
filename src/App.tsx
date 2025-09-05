@@ -14,6 +14,7 @@ import GraphView from "./components/GraphView";
 // import ErrorBoundary from "./components/ErrorBoundary";
 import { useLegendState } from "./hooks/useLegenedState";
 import { fetchAddressTxs } from "./services/blockChain";
+import AddressPanel from "./components/AdressPanel";
 
 export default function App() {
   const [address, setAddress] = useState("1dice6YgEVBf88erBFra9BHf6ZMoyvG88");
@@ -83,6 +84,7 @@ export default function App() {
 
         {/* <ErrorBoundary> */}
         <GraphView
+          selected={selected}
           nodes={nodes}
           edges={edges}
           onNodeClick={(id) => setSelected(id)}
@@ -91,11 +93,10 @@ export default function App() {
         />
         {/* </ErrorBoundary> */}
 
-        {/* <AddressPanel
+        <AddressPanel
           node={nodes.find((n) => n.id === selected) ?? null}
-          onLoadMore={() => {
-          }}
-        /> */}
+          onLoadMore={() => {}}
+        />
 
         {/* <ApiLogDrawer isOpen={open} onClose={onClose} logs={getApiLog()} /> */}
       </Container>
