@@ -1,7 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useRef } from "react";
-import { Box, Spinner } from "@chakra-ui/react";
-import ForceGraph2D from "react-force-graph-2d";
+import { Box, Spinner, useBreakpointValue } from "@chakra-ui/react";
+import ForceGraph2D, {
+  type ForceGraphMethods,
+  type LinkObject,
+  type NodeObject,
+} from "react-force-graph-2d";
 import type { GraphEdge, GraphNode } from "../types";
 
 interface Props {
@@ -19,7 +22,10 @@ export default function GraphView({
   loading,
   onNodeClick,
 }: Props) {
-  const fgRef = useRef<any>(null);
+  const isMobile = useBreakpointValue({ base: true, md: false });
+  const fgRef = useRef<
+    ForceGraphMethods<NodeObject<GraphNode>, LinkObject<GraphEdge>> | undefined
+  >(undefined);
   const validLinks = edges.filter(
     (l: GraphEdge) =>
       nodes.some((n: GraphNode) => n.id === l.source) &&
@@ -37,15 +43,16 @@ export default function GraphView({
 
   return (
     <Box
+      mb={4}
       position="relative"
-      height="600px"
+      h={{ base: "400px", md: "600px" }}
       borderWidth={1}
       borderRadius="md"
       overflow="hidden"
     >
       {loading && (
         <Box position="absolute" top={2} right={2} zIndex={10}>
-          <Spinner size="xl" />
+          <Spinner size={{ base: "md", sm: "xl" }} />
         </Box>
       )}
       <ForceGraph2D
@@ -56,8 +63,8 @@ export default function GraphView({
         linkDirectionalArrowRelPos={1}
         onNodeClick={(node: GraphNode) => onNodeClick(node)}
         onNodeDragEnd={() => fgRef.current && fgRef.current.zoomToFit(400)}
-        width={800}
-        height={600}
+        // width={800}
+        height={isMobile ? 400 : 600}
         nodeCanvasObjectMode={() => "after"}
         nodeColor={(node) => (node.id === selected ? "orange" : "blue")}
         nodeCanvasObject={(node, ctx, globalScale) => {

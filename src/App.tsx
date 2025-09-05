@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import {
   Button,
@@ -10,7 +9,6 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import GraphView from "./components/GraphView";
-// import ErrorBoundary from "./components/ErrorBoundary";
 import { fetchAddressTxs } from "./services/blockChain";
 import AddressPanel from "./components/AdressPanel";
 import type { TxSummary, TxVin, TxVout } from "./types/ITx";
@@ -123,18 +121,33 @@ export default function App() {
 
   return (
     <ChakraProvider>
-      <Container maxW="container.xl" py={6}>
-        <Heading size="lg" mb={4}>
-          Leadspotting — Blockchain Investigator
+      <Container maxW="container.xl" py={{ base: 4, md: 6 }}>
+        <Heading size={{ base: "sm", sm: "lg" }} mb={4}>
+          Blockchain Investigator
         </Heading>
-        <HStack mb={4} spacing={2}>
+        <HStack mb={4} spacing={{ base: 1, sm: 2 }} flexWrap="wrap">
           <Input
+            w={{ base: "100%", sm: "350px" }}
             placeholder="Enter Bitcoin address"
             value={address}
             onChange={(e) => setAddress(e.target.value)}
           />
-          <Button onClick={onSubmit}>Search</Button>
-          <Button onClick={onOpen}>API Log</Button>
+          <Button
+            flexShrink={0}
+            size={{ base: "sm", sm: "md" }}
+            w={{ base: "100%", sm: "auto" }}
+            onClick={onSubmit}
+          >
+            Search
+          </Button>
+          <Button
+            flexShrink={0}
+            size={{ base: "sm", sm: "md" }}
+            w={{ base: "100%", sm: "auto" }}
+            onClick={onOpen}
+          >
+            API Log
+          </Button>
         </HStack>
 
         {/* <ErrorBoundary> */}
