@@ -4,10 +4,7 @@ import { httpService } from "./httpService";
 
 // const API_BASE = "api/api";
 
-const baseUrl = "/api/api";
-// import.meta.env.MODE === "development"
-//   ? "/api/api"
-//   : "https://blockstream.info/api";
+const baseUrl = import.meta.env.MODE === "development" ? "/api/api" : "/api";
 
 export async function fetchAddressTxs(
   address: string,
