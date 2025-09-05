@@ -34,21 +34,3 @@ export async function fetchAddressTxs(
     throw err;
   }
 }
-
-// export async function fetchTxDetails(txid: string) {
-//   const url = `/tx/${txid}`;
-//   //   addLogEntry({ url: `${API_BASE}${url}`, state: "loading" });
-//   // eslint-disable-next-line no-useless-catch
-//   try {
-//     const { data } = await httpService.get(`${API_BASE}${url}`);
-//     // addLogEntry({ url: `${API_BASE}${url}`, state: "success" });
-//     return data;
-//   } catch (err) {
-//     // addLogEntry({
-//     //   url: `${API_BASE}${url}`,
-//     //   state: "error",
-//     //   error: (err as Error).message,
-//     // });
-//     throw err;
-//   }
-// }
