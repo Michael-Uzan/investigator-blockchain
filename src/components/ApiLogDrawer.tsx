@@ -28,8 +28,9 @@ export default function ApiLogDrawer({
         <DrawerBody>
           {logs.map((l, idx) => (
             <Box key={idx} borderBottom="1px" py={2}>
-              <Text fontSize="xs">
-                {l.state.toUpperCase()} — {l.url}
+              <Text fontSize="xs" color={l.error ? "red.500" : "green.500"}>
+                {l.state.toUpperCase()} —{" "}
+                <span style={{ color: "black" }}>{l.url}</span>
               </Text>
               {l.params && (
                 <Text fontSize="xs">params: {JSON.stringify(l.params)}</Text>
