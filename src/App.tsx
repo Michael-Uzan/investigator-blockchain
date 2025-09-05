@@ -15,6 +15,11 @@ import GraphView from "./components/GraphView";
 import { useLegendState } from "./hooks/useLegenedState";
 import { fetchAddressTxs } from "./services/blockChain";
 import AddressPanel from "./components/AdressPanel";
+import axios from "axios";
+import type { TxSummary, TxVin, TxVout } from "./types/ITx";
+import type { GraphEdge, GraphNode } from "./types";
+import { i } from "framer-motion/client";
+import { LIMIT_SIZE } from "./config";
 
 export default function App() {
   const [address, setAddress] = useState("1dice6YgEVBf88erBFra9BHf6ZMoyvG88");
@@ -32,20 +37,78 @@ export default function App() {
   } = useLegendState();
   // const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const loadMoreTransactions = async (nodeId: string) => {
+    const node = nodes.find((n) => n.id === nodeId);
+    if (!node) {
+      return;
+    }
+
+    const offset = node.loadedTxs ?? 0;
+
+    try {
+      const txs: TxSummary[] = await fetchAddressTxs(
+        nodeId,
+        LIMIT_SIZE,
+        offset
+      );
+
+      // Build nodes and links from transactions
+      const newNodes: GraphNode[] = [];
+      const newLinks: GraphEdge[] = [];
+
+      txs.forEach((tx) => {
+        const inputs = tx.vin
+          .map((v) => v.prevout?.scriptpubkey_address)
+          .filter(Boolean) as string[];
+        const outputs = tx.vout
+          .map((v) => v.scriptpubkey_address)
+          .filter(Boolean) as string[];
+
+        // Add nodes for missing addresses
+        inputs.concat(outputs).forEach((addr) => {
+          if (
+            !nodes.find((n) => n.id === addr) &&
+            !newNodes.find((n) => n.id === addr)
+          ) {
+            newNodes.push({ id: addr });
+          }
+        });
+
+        // Add links
+        inputs.forEach((inp) => {
+          outputs.forEach((out) => {
+            newLinks.push({ source: inp, target: out, txid: tx.txid });
+          });
+        });
+      });
+
+      const updatedNodes = newNodes.map((n) =>
+        n.id === nodeId
+          ? { ...n, loadedTxs: (n.loadedTxs ?? 0) + txs.length }
+          : n
+      );
+      addNodes(updatedNodes);
+      addEdges(newLinks);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
   async function onSubmit() {
     clear();
     setLoading(true);
     try {
-      const txs = await fetchAddressTxs(address, 10, 0);
+      const txs: TxSummary[] = await fetchAddressTxs(address);
       // transform txs into nodes & edges - minimal example
       const newNodes = [{ id: address, txCount: txs.length }];
-      const newEdges = txs.flatMap((tx: any) => {
+      const newEdges = txs.flatMap((tx: TxSummary) => {
         // parse inputs/outputs to create edges
         const inputs = tx.vin
-          .map((v: any) => v.prevout?.scriptpubkey_address)
+          .map((v: TxVin) => v.prevout?.scriptpubkey_address || "")
           .filter(Boolean);
+
         const outputs = tx.vout
-          .map((v: any) => v.scriptpubkey_address)
+          .map((v: TxVout) => v.scriptpubkey_address || "")
           .filter(Boolean);
         // link inputs -> outputs
         return inputs.flatMap((inp: string) =>
@@ -95,7 +158,11 @@ export default function App() {
 
         <AddressPanel
           node={nodes.find((n) => n.id === selected) ?? null}
-          onLoadMore={() => {}}
+          onLoadMore={() => {
+            if (selected) {
+              loadMoreTransactions(selected);
+            }
+          }}
         />
 
         {/* <ApiLogDrawer isOpen={open} onClose={onClose} logs={getApiLog()} /> */}

@@ -1,3 +1,4 @@
+import { LIMIT_SIZE } from "../config";
 import { httpService } from "./httpService";
 // import { addLogEntry } from "../hooks/useLegendState";
 
@@ -8,8 +9,11 @@ const API_BASE = "api/api";
 //   timeout: 10000,
 // });
 
-export async function fetchAddressTxs(address: string, limit = 10, offset = 0) {
-  console.log("🚀 ~ fetchAddressTxs ~ address:", address);
+export async function fetchAddressTxs(
+  address: string,
+  limit = LIMIT_SIZE,
+  offset = 0
+) {
   const url = `/address/${address}/txs`;
   const params = { limit, offset };
   //   addLogEntry({ url: `${API_BASE}${url}`, params, state: "loading" });
@@ -18,7 +22,6 @@ export async function fetchAddressTxs(address: string, limit = 10, offset = 0) {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     // const { data } = await client.get<any[]>(url, { params });
     const data = await httpService.get(`${API_BASE}${url}`, params);
-    console.log("🚀 ~ fetchAddressTxs ~ data:", data);
     // addLogEntry({
     //   url: `${API_BASE}${url}`,
     //   params,
