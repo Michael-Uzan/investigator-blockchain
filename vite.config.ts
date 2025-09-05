@@ -8,8 +8,7 @@ export default defineConfig({
       "/api": {
         target: "https://blockstream.info",
         changeOrigin: true,
-        rewrite: (path: string) =>
-          path.startsWith("/api") ? path.slice(4) : path,
+        rewrite: (path) => path.replace(/^\/api/, ""),
       },
     },
   },

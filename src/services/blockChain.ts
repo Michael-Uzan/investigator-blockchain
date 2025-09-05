@@ -2,7 +2,12 @@ import { LIMIT_SIZE } from "../config";
 import { logStore$ } from "../store/logStore";
 import { httpService } from "./httpService";
 
-const API_BASE = "api/api";
+// const API_BASE = "api/api";
+
+const baseUrl =
+  import.meta.env.MODE === "development"
+    ? "/api/api"
+    : "https://blockstream.info/api";
 
 export async function fetchAddressTxs(
   address: string,
@@ -13,9 +18,9 @@ export async function fetchAddressTxs(
   const params = { limit, offset };
 
   try {
-    const data = await httpService.get(`${API_BASE}${url}`, params);
+    const data = await httpService.get(`${baseUrl}${url}`, params);
     logStore$.addLog({
-      url: `${API_BASE}${url}`,
+      url: `${baseUrl}${url}`,
       params,
       state: "success",
       resultCount: data.length,
@@ -23,7 +28,7 @@ export async function fetchAddressTxs(
     return data;
   } catch (err) {
     logStore$.addLog({
-      url: `${API_BASE}${url}`,
+      url: `${baseUrl}${url}`,
       params,
       state: "error",
       error: (err as Error).message,
