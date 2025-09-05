@@ -8,18 +8,16 @@ interface Props {
   selected: string | null;
   nodes: GraphNode[];
   edges: GraphEdge[];
-  onNodeClick: (nodeId: string) => void;
-  onExpandNode: (nodeId: string) => void;
   loading: boolean;
+  onNodeClick: (node: GraphNode) => void;
 }
 
 export default function GraphView({
   selected,
   nodes,
   edges,
-  onNodeClick,
-  onExpandNode,
   loading,
+  onNodeClick,
 }: Props) {
   const fgRef = useRef<any>(null);
   const validLinks = edges.filter(
@@ -47,7 +45,7 @@ export default function GraphView({
     >
       {loading && (
         <Box position="absolute" top={2} right={2} zIndex={10}>
-          <Spinner />
+          <Spinner size="xl" />
         </Box>
       )}
       <ForceGraph2D
@@ -56,7 +54,7 @@ export default function GraphView({
         nodeLabel={(n) => `${n.id}`}
         linkDirectionalArrowLength={6}
         linkDirectionalArrowRelPos={1}
-        onNodeClick={(node) => onNodeClick((node as any).id)}
+        onNodeClick={(node: GraphNode) => onNodeClick(node)}
         onNodeDragEnd={() => fgRef.current && fgRef.current.zoomToFit(400)}
         width={800}
         height={600}

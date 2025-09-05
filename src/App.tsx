@@ -7,37 +7,28 @@ import {
   Heading,
   HStack,
   Input,
+  useDisclosure,
 } from "@chakra-ui/react";
 import GraphView from "./components/GraphView";
-// import AddressPanel from "./components/AddressPanel";
-// import ApiLogDrawer from "./components/ApiLogDrawer";
 // import ErrorBoundary from "./components/ErrorBoundary";
-import { useLegendState } from "./hooks/useLegenedState";
 import { fetchAddressTxs } from "./services/blockChain";
 import AddressPanel from "./components/AdressPanel";
-import axios from "axios";
 import type { TxSummary, TxVin, TxVout } from "./types/ITx";
 import type { GraphEdge, GraphNode } from "./types";
-import { i } from "framer-motion/client";
 import { LIMIT_SIZE } from "./config";
+import ApiLogDrawer from "./components/ApiLogDrawer";
+import { graphStore$ } from "./store/graphStore";
+import { use$ } from "@legendapp/state/react";
 
 export default function App() {
   const [address, setAddress] = useState("1dice6YgEVBf88erBFra9BHf6ZMoyvG88");
   const [loading, setLoading] = useState(false);
-  const {
-    nodes,
-    edges,
-    addNodes,
-    addEdges,
-    selected,
-    setSelected,
-    getApiLog,
-    pushLogUpdate,
-    clear,
-  } = useLegendState();
-  // const { isOpen, onOpen, onClose } = useDisclosure();
+  const { selected, nodes, edges } = use$(graphStore$);
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const loadMoreTransactions = async (nodeId: string) => {
+    setLoading(true);
     const node = nodes.find((n) => n.id === nodeId);
     if (!node) {
       return;
@@ -87,15 +78,17 @@ export default function App() {
           ? { ...n, loadedTxs: (n.loadedTxs ?? 0) + txs.length }
           : n
       );
-      addNodes(updatedNodes);
-      addEdges(newLinks);
+      graphStore$.addNodes(updatedNodes);
+      graphStore$.addEdges(newLinks);
     } catch (err) {
       console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
   async function onSubmit() {
-    clear();
+    graphStore$.clear();
     setLoading(true);
     try {
       const txs: TxSummary[] = await fetchAddressTxs(address);
@@ -119,12 +112,11 @@ export default function App() {
           }))
         );
       });
-      addNodes(newNodes);
-      addEdges(newEdges);
+      graphStore$.addNodes(newNodes);
+      graphStore$.addEdges(newEdges);
     } catch (err) {
       console.error(err);
     } finally {
-      pushLogUpdate();
       setLoading(false);
     }
   }
@@ -142,30 +134,30 @@ export default function App() {
             onChange={(e) => setAddress(e.target.value)}
           />
           <Button onClick={onSubmit}>Search</Button>
-          {/* <Button onClick={onOpen}>API Log</Button> */}
+          <Button onClick={onOpen}>API Log</Button>
         </HStack>
 
         {/* <ErrorBoundary> */}
         <GraphView
-          selected={selected}
+          selected={selected?.id || null}
           nodes={nodes}
           edges={edges}
-          onNodeClick={(id) => setSelected(id)}
-          onExpandNode={() => {}}
+          onNodeClick={graphStore$.setSelected}
           loading={loading}
         />
         {/* </ErrorBoundary> */}
 
         <AddressPanel
-          node={nodes.find((n) => n.id === selected) ?? null}
+          loading={loading}
+          node={selected}
           onLoadMore={() => {
             if (selected) {
-              loadMoreTransactions(selected);
+              loadMoreTransactions(selected?.id);
             }
           }}
         />
 
-        {/* <ApiLogDrawer isOpen={open} onClose={onClose} logs={getApiLog()} /> */}
+        <ApiLogDrawer isOpen={isOpen} onClose={onClose} />
       </Container>
     </ChakraProvider>
   );

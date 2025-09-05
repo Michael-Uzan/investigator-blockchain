@@ -1,6 +1,7 @@
 import { LIMIT_SIZE } from "../config";
+import { addLogEntry } from "../hooks/useLegenedState";
+import { logStore$ } from "../store/logStore";
 import { httpService } from "./httpService";
-// import { addLogEntry } from "../hooks/useLegendState";
 
 const API_BASE = "api/api";
 
@@ -22,20 +23,20 @@ export async function fetchAddressTxs(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     // const { data } = await client.get<any[]>(url, { params });
     const data = await httpService.get(`${API_BASE}${url}`, params);
-    // addLogEntry({
-    //   url: `${API_BASE}${url}`,
-    //   params,
-    //   state: "success",
-    //   resultCount: data.length,
-    // });
+    logStore$.addLog({
+      url: `${API_BASE}${url}`,
+      params,
+      state: "success",
+      resultCount: data.length,
+    });
     return data;
   } catch (err) {
-    // addLogEntry({
-    //   url: `${API_BASE}${url}`,
-    //   params,
-    //   state: "error",
-    //   error: (err as Error).message,
-    // });
+    logStore$.addLog({
+      url: `${API_BASE}${url}`,
+      params,
+      state: "error",
+      error: (err as Error).message,
+    });
     throw err;
   }
 }
