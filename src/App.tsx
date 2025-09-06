@@ -1,13 +1,5 @@
 import { useState } from "react";
-import {
-  Button,
-  ChakraProvider,
-  Container,
-  Heading,
-  HStack,
-  Input,
-  useDisclosure,
-} from "@chakra-ui/react";
+import { ChakraProvider, useDisclosure } from "@chakra-ui/react";
 import GraphView from "./components/GraphView";
 import { fetchAddressTxs } from "./services/blockChain";
 import AddressPanel from "./components/AdressPanel";
@@ -17,7 +9,11 @@ import { LIMIT_SIZE } from "./config";
 import ApiLogDrawer from "./components/ApiLogDrawer";
 import { graphStore$ } from "./store/graphStore";
 import { use$ } from "@legendapp/state/react";
-import ErrorBoundary from "./components/ErrorBoundary";
+import ErrorBoundary from "./components/utils/ErrorBoundary";
+import { GraphContainer } from "./components/layout/GraphContainer";
+import { MainContainer } from "./components/layout/MainContainer";
+import { Header } from "./components/layout/Header";
+import { SearchInput } from "./components/SearchInput";
 
 export default function App() {
   const [address, setAddress] = useState("1dice6YgEVBf88erBFra9BHf6ZMoyvG88");
@@ -122,44 +118,26 @@ export default function App() {
 
   return (
     <ChakraProvider>
-      <Container maxW="container.xl" py={{ base: 4, md: 6 }}>
-        <Heading size={{ base: "sm", sm: "lg" }} mb={4}>
-          Blockchain Investigator
-        </Heading>
-        <HStack mb={4} spacing={{ base: 1, sm: 2 }} flexWrap="wrap">
-          <Input
-            w={{ base: "100%", sm: "350px" }}
-            placeholder="Enter Bitcoin address"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-          <Button
-            flexShrink={0}
-            size={{ base: "sm", sm: "md" }}
-            w={{ base: "100%", sm: "auto" }}
-            onClick={onSubmit}
-          >
-            Search
-          </Button>
-          <Button
-            flexShrink={0}
-            size={{ base: "sm", sm: "md" }}
-            w={{ base: "100%", sm: "auto" }}
-            onClick={onOpen}
-          >
-            API Log
-          </Button>
-        </HStack>
+      <MainContainer>
+        <Header title="Blockchain Investigator" onMenuClick={onOpen} />
+        <SearchInput
+          title="BitCoin Address"
+          value={address}
+          onChange={(value) => setAddress(value)}
+          onSubmit={onSubmit}
+        />
 
-        <ErrorBoundary>
-          <GraphView
-            selected={selected?.id || null}
-            nodes={nodes}
-            edges={edges}
-            onNodeClick={graphStore$.setSelected}
-            loading={loading}
-          />
-        </ErrorBoundary>
+        <GraphContainer>
+          <ErrorBoundary>
+            <GraphView
+              selected={selected?.id || null}
+              nodes={nodes}
+              edges={edges}
+              onNodeClick={graphStore$.setSelected}
+              loading={loading}
+            />
+          </ErrorBoundary>
+        </GraphContainer>
 
         <AddressPanel
           loading={loading}
@@ -172,7 +150,7 @@ export default function App() {
         />
 
         <ApiLogDrawer isOpen={isOpen} onClose={onClose} />
-      </Container>
+      </MainContainer>
     </ChakraProvider>
   );
 }

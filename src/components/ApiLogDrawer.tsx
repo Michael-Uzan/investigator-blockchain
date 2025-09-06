@@ -38,6 +38,7 @@ export default function ApiLogDrawer({
               {l.error && <Text color="red.500">{l.error}</Text>}
             </Box>
           ))}
+          {!logs.length ? <Text>There is no logs. </Text> : null}
         </DrawerBody>
       </DrawerContent>
     </Drawer>
