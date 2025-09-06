@@ -18,9 +18,7 @@ export const Header = ({ title, onMenuClick }: TitleProps) => {
         aria-label="header-buuton"
         icon={<HamburgerIcon boxSize={"20px"} />}
         onClick={onMenuClick}
-      >
-        etert
-      </IconButton>
+      />
     </HStack>
   );
 };

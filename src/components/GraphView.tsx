@@ -57,8 +57,7 @@ export default function GraphView({
         linkDirectionalArrowRelPos={1}
         onNodeClick={(node: IGraphNode) => onNodeClick(node)}
         onNodeDragEnd={() => fgRef.current && fgRef.current.zoomToFit(400)}
-        // width={800}
-        height={isMobile ? 400 : 600}
+        height={isMobile ? 400 : 550}
         nodeCanvasObjectMode={() => "after"}
         nodeColor={(node) => (node.id === selected ? "orange" : "blue")}
         nodeCanvasObject={(node, ctx, globalScale) => {

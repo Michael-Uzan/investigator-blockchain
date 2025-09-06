@@ -10,7 +10,7 @@ export const GraphContainer = ({ children }: GraphContainerProps) => {
     <Box
       mb={4}
       position="relative"
-      h={{ base: "400px", md: "600px" }}
+      h={{ base: "400px", md: "550px" }}
       borderWidth={1}
       borderRadius="md"
       overflow="hidden"
