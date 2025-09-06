@@ -5,14 +5,14 @@ import ForceGraph2D, {
   type LinkObject,
   type NodeObject,
 } from "react-force-graph-2d";
-import type { GraphEdge, GraphNode } from "../types";
+import type { IGraphEdge, IGraphNode } from "../types/IGraph";
 
 interface Props {
   selected: string | null;
-  nodes: GraphNode[];
-  edges: GraphEdge[];
+  nodes: IGraphNode[];
+  edges: IGraphEdge[];
   loading: boolean;
-  onNodeClick: (node: GraphNode) => void;
+  onNodeClick: (node: IGraphNode) => void;
 }
 
 export default function GraphView({
@@ -24,16 +24,17 @@ export default function GraphView({
 }: Props) {
   const isMobile = useBreakpointValue({ base: true, md: false });
   const fgRef = useRef<
-    ForceGraphMethods<NodeObject<GraphNode>, LinkObject<GraphEdge>> | undefined
+    | ForceGraphMethods<NodeObject<IGraphNode>, LinkObject<IGraphEdge>>
+    | undefined
   >(undefined);
   const validLinks = edges.filter(
-    (l: GraphEdge) =>
-      nodes.some((n: GraphNode) => n.id === l.source) &&
-      nodes.some((n: GraphNode) => n.id === l.target)
+    (l: IGraphEdge) =>
+      nodes.some((n: IGraphNode) => n.id === l.source) &&
+      nodes.some((n: IGraphNode) => n.id === l.target)
   );
   const graphData = {
-    nodes: nodes.map((n: GraphNode) => ({ val: 1, ...n })),
-    links: validLinks.map((e: GraphEdge) => ({
+    nodes: nodes.map((n: IGraphNode) => ({ val: 1, ...n })),
+    links: validLinks.map((e: IGraphEdge) => ({
       source: e.source,
       target: e.target,
       txid: e.txid,
@@ -54,7 +55,7 @@ export default function GraphView({
         nodeLabel={(n) => `${n.id}`}
         linkDirectionalArrowLength={6}
         linkDirectionalArrowRelPos={1}
-        onNodeClick={(node: GraphNode) => onNodeClick(node)}
+        onNodeClick={(node: IGraphNode) => onNodeClick(node)}
         onNodeDragEnd={() => fgRef.current && fgRef.current.zoomToFit(400)}
         // width={800}
         height={isMobile ? 400 : 600}

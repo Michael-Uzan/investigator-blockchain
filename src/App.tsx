@@ -3,8 +3,7 @@ import { ChakraProvider, useDisclosure } from "@chakra-ui/react";
 import GraphView from "./components/GraphView";
 import { fetchAddressTxs } from "./services/blockChain";
 import AddressPanel from "./components/AdressPanel";
-import type { TxSummary, TxVin, TxVout } from "./types/ITx";
-import type { GraphEdge, GraphNode } from "./types";
+import type { ITxSummary, ITxVin, ITxVout } from "./types/ITx";
 import { LIMIT_SIZE } from "./config";
 import ApiLogDrawer from "./components/ApiLogDrawer";
 import { graphStore$ } from "./store/graphStore";
@@ -14,6 +13,7 @@ import { GraphContainer } from "./components/layout/GraphContainer";
 import { MainContainer } from "./components/layout/MainContainer";
 import { Header } from "./components/layout/Header";
 import { SearchInput } from "./components/SearchInput";
+import type { IGraphEdge, IGraphNode } from "./types/IGraph";
 
 export default function App() {
   const [address, setAddress] = useState("1dice6YgEVBf88erBFra9BHf6ZMoyvG88");
@@ -24,7 +24,7 @@ export default function App() {
 
   const loadMoreTransactions = async (nodeId: string) => {
     setLoading(true);
-    const node = nodes.find((n) => n.id === nodeId);
+    const node = nodes.find((n: IGraphNode) => n.id === nodeId);
     if (!node) {
       return;
     }
@@ -32,15 +32,15 @@ export default function App() {
     const offset = node.loadedTxs ?? 0;
 
     try {
-      const txs: TxSummary[] = await fetchAddressTxs(
+      const txs: ITxSummary[] = await fetchAddressTxs(
         nodeId,
         LIMIT_SIZE,
         offset
       );
 
       // Build nodes and links from transactions
-      const newNodes: GraphNode[] = [];
-      const newLinks: GraphEdge[] = [];
+      const newNodes: IGraphNode[] = [];
+      const newLinks: IGraphEdge[] = [];
 
       txs.forEach((tx) => {
         const inputs = tx.vin
@@ -53,7 +53,7 @@ export default function App() {
         // Add nodes for missing addresses
         inputs.concat(outputs).forEach((addr) => {
           if (
-            !nodes.find((n) => n.id === addr) &&
+            !nodes.find((n: IGraphNode) => n.id === addr) &&
             !newNodes.find((n) => n.id === addr)
           ) {
             newNodes.push({ id: addr });
@@ -86,17 +86,17 @@ export default function App() {
     graphStore$.clear();
     setLoading(true);
     try {
-      const txs: TxSummary[] = await fetchAddressTxs(address);
+      const txs: ITxSummary[] = await fetchAddressTxs(address);
       // transform txs into nodes & edges - minimal example
       const newNodes = [{ id: address, txCount: txs.length }];
-      const newEdges = txs.flatMap((tx: TxSummary) => {
+      const newEdges = txs.flatMap((tx: ITxSummary) => {
         // parse inputs/outputs to create edges
         const inputs = tx.vin
-          .map((v: TxVin) => v.prevout?.scriptpubkey_address || "")
+          .map((v: ITxVin) => v.prevout?.scriptpubkey_address || "")
           .filter(Boolean);
 
         const outputs = tx.vout
-          .map((v: TxVout) => v.scriptpubkey_address || "")
+          .map((v: ITxVout) => v.scriptpubkey_address || "")
           .filter(Boolean);
         // link inputs -> outputs
         return inputs.flatMap((inp: string) =>

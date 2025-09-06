@@ -1,15 +1,17 @@
 import { Box, Heading, Text, Button } from "@chakra-ui/react";
-import type { GraphNode } from "../types";
+import type { IGraphNode } from "../types/IGraph";
+
+type AddressPanelProps = {
+  loading: boolean;
+  node: IGraphNode | null;
+  onLoadMore: () => void;
+};
 
 export default function AddressPanel({
   loading,
   node,
   onLoadMore,
-}: {
-  loading: boolean;
-  node: GraphNode | null;
-  onLoadMore: () => void;
-}) {
+}: AddressPanelProps) {
   return (
     <Box p={4} borderWidth={1} borderRadius="md">
       {node ? (

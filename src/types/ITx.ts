@@ -1,4 +1,4 @@
-export interface TxVin {
+export interface ITxVin {
   txid?: string;
   vout?: number;
   prevout?: {
@@ -7,15 +7,15 @@ export interface TxVin {
   };
 }
 
-export interface TxVout {
+export interface ITxVout {
   scriptpubkey_address?: string;
   value?: number;
 }
 
-export interface TxSummary {
+export interface ITxSummary {
   txid: string;
-  vin: TxVin[];
-  vout: TxVout[];
+  vin: ITxVin[];
+  vout: ITxVout[];
   status?: {
     confirmed: boolean;
     block_height?: number;

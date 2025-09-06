@@ -10,13 +10,12 @@ import {
 } from "@chakra-ui/react";
 import { logStore$ } from "../store/logStore";
 
-export default function ApiLogDrawer({
-  isOpen,
-  onClose,
-}: {
+type ApiLogDrawerProps = {
   isOpen: boolean;
   onClose: () => void;
-}) {
+};
+
+export default function ApiLogDrawer({ isOpen, onClose }: ApiLogDrawerProps) {
   const logs = logStore$.logs.get();
 
   return (
