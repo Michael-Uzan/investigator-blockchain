@@ -1,69 +1,73 @@
-# React + TypeScript + Vite
+# Investigator Blockchain
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[Link to the App](https://investigator-blockchain.vercel.app/)
 
-Currently, two official plugins are available:
+![Project Logo](./public/bitcoin.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Investigator Blockchain** is a web-based tool for visually exploring Bitcoin transactions, addresses, and networks. It provides an interactive graph interface to track the flow of transactions, analyze blockchain data, and inspect relationships between addresses.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Features
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Visualize Bitcoin addresses and transactions as interactive nodes and edges.  
+- Filter and highlight nodes based on selection.  
+- Track inputs and outputs of transactions.  
+- Logging and state management for debugging and analysis.  
+- Responsive and modern UI using React and Chakra UI.  
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Tech Stack
+
+- **Frontend:** React 19, TypeScript  
+- **State Management:** @legendapp/state  
+- **UI Components:** Chakra UI, Framer Motion  
+- **Graph Visualization:** react-force-graph-2d  
+- **HTTP Requests:** Axios  
+- **Build Tool:** Vite  
+- **Testing:** Jest, Testing Library  
+- **Deployment:** Vercel  
+
+---
+
+## Data Source
+
+Blockchain data is fetched from the [Blockstream API](https://blockstream.info/api/).  
+
+
+- **Graph Store:** Manages nodes, edges, and selection in the graph.  
+- **Log Store:** Tracks API requests, responses, and errors.  
+- **Services:** Axios wrapper (`httpService`) and `blockstreamService` for fetching transactions.  
+- **Graph Rendering:** Uses `react-force-graph-2d` for interactive visualization.
+
+## How the Fetch Works
+
+1. The user enters a Bitcoin address.  
+2. `blockstreamService.fetchAddressTxs(address)` is called.  
+3. `httpService.get(url, params)` uses Axios to fetch transaction data.  
+4. Fetch data is stored in the `logStore$` for debugging and history.  
+5. Nodes and edges are created with `graphUtils.buildNodesAndEdges` and `graphUtils.buildNodesAndLinks`.  
+6. `graphStore$` updates the graph visualization.  
+
+---
+
+## Installation
+
+Make sure you have [Node.js](https://nodejs.org/) installed.  
+Clone the repository and install dependencies:
+
+```bash
+git clone https://github.com/<your-username>/investigator-blockchain.git
+cd investigator-blockchain
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Run 
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+pnpm run dev
 ```
+
+
+
