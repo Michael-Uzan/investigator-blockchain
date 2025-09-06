@@ -5,7 +5,7 @@
     { "path": "./tsconfig.node.json" }
   ],
   "compilerOptions": {
-    "types": ["jest", "@testing-library/jest-dom"],
+    "types": ["jest", "@testing-library/jest-dom", "testing-library__jest-dom"],
     "target": "ESNext",
     "module": "ESNext",
     "jsx": "react-jsx",
