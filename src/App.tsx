@@ -17,6 +17,7 @@ import { LIMIT_SIZE } from "./config";
 import ApiLogDrawer from "./components/ApiLogDrawer";
 import { graphStore$ } from "./store/graphStore";
 import { use$ } from "@legendapp/state/react";
+import ErrorBoundary from "./components/ErrorBoundary";
 
 export default function App() {
   const [address, setAddress] = useState("1dice6YgEVBf88erBFra9BHf6ZMoyvG88");
@@ -150,15 +151,15 @@ export default function App() {
           </Button>
         </HStack>
 
-        {/* <ErrorBoundary> */}
-        <GraphView
-          selected={selected?.id || null}
-          nodes={nodes}
-          edges={edges}
-          onNodeClick={graphStore$.setSelected}
-          loading={loading}
-        />
-        {/* </ErrorBoundary> */}
+        <ErrorBoundary>
+          <GraphView
+            selected={selected?.id || null}
+            nodes={nodes}
+            edges={edges}
+            onNodeClick={graphStore$.setSelected}
+            loading={loading}
+          />
+        </ErrorBoundary>
 
         <AddressPanel
           loading={loading}

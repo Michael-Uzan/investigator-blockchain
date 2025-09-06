@@ -6,6 +6,7 @@ import ForceGraph2D, {
   type NodeObject,
 } from "react-force-graph-2d";
 import type { GraphEdge, GraphNode } from "../types";
+import { GraphContainer } from "./layout/GraphContainer";
 
 interface Props {
   selected: string | null;
@@ -42,14 +43,7 @@ export default function GraphView({
   };
 
   return (
-    <Box
-      mb={4}
-      position="relative"
-      h={{ base: "400px", md: "600px" }}
-      borderWidth={1}
-      borderRadius="md"
-      overflow="hidden"
-    >
+    <GraphContainer>
       {loading && (
         <Box position="absolute" top={2} right={2} zIndex={10}>
           <Spinner size={{ base: "md", sm: "xl" }} />
@@ -78,6 +72,6 @@ export default function GraphView({
           ctx.fillText(label, node.x!, node.y! + 8);
         }}
       />
-    </Box>
+    </GraphContainer>
   );
 }
