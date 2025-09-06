@@ -1,5 +1,10 @@
 import { useRef } from "react";
-import { Box, Spinner, useBreakpointValue } from "@chakra-ui/react";
+import {
+  Box,
+  Spinner,
+  useBreakpointValue,
+  useColorMode,
+} from "@chakra-ui/react";
 import ForceGraph2D, {
   type ForceGraphMethods,
   type LinkObject,
@@ -22,6 +27,7 @@ export default function GraphView({
   loading,
   onNodeClick,
 }: Props) {
+  const { colorMode } = useColorMode();
   const isMobile = useBreakpointValue({ base: true, md: false });
   const fgRef = useRef<
     | ForceGraphMethods<NodeObject<IGraphNode>, LinkObject<IGraphEdge>>
@@ -65,7 +71,13 @@ export default function GraphView({
           const fontSize = 12 / globalScale;
 
           ctx.font = `${fontSize}px Sans-Serif`;
-          ctx.fillStyle = label === selected ? "red" : "black";
+
+          ctx.fillStyle =
+            label === selected
+              ? "red"
+              : colorMode === "light"
+              ? "black"
+              : "white";
           ctx.textAlign = "center";
           ctx.textBaseline = "top";
           ctx.fillText(label, node.x!, node.y! + 8);
