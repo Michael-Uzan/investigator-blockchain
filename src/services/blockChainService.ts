@@ -3,9 +3,7 @@ import { logStore$ } from "../store/logStore";
 import { httpService } from "./httpService";
 
 const baseUrl =
-  import.meta.env.MODE === "development"
-    ? "/api/api"
-    : "https://blockstream.info/api";
+  import.meta.env.MODE === "development" ? "/api/api" : "/api/blockstream";
 
 export async function fetchAddressTxs(
   address: string,
