@@ -6,6 +6,11 @@
 
 **Investigator Blockchain** is a web-based tool for visually exploring Bitcoin transactions, addresses, and networks. It provides an interactive graph interface to track the flow of transactions, analyze blockchain data, and inspect relationships between addresses.
 
+<img width="1699" height="899" alt="Screenshot 2025-09-08 at 10 25 25" src="https://github.com/user-attachments/assets/99930e5e-cb98-40b8-8bda-9f472f3d2fe2" />
+<img width="416" height="841" alt="Screenshot 2025-09-08 at 10 27 00" src="https://github.com/user-attachments/assets/7fbfeac6-9f4c-457d-9f24-94ef89a1b83f" />
+
+
+
 ---
 
 ## Features
